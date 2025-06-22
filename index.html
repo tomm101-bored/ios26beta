@@ -4,97 +4,309 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>iOS 26 Beta Timeline</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
- <style>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ------------------- */
+/* --- Global Styles --- */
+/* ------------------- */
 body {
   font-family: 'Quicksand', sans-serif;
   margin: 0;
-  padding: 0;
+  padding: 20px;
   background: linear-gradient(to bottom, #aefcff, #e0fffa);
-  color: #232323;
+  color: #2c3e50; /* Softer black for better readability */
   min-height: 100vh;
-  background-repeat: no-repeat;
   background-attachment: fixed;
 }
 
+/* ------------------- */
+/* --- Header Styles --- */
+/* ------------------- */
 header {
   text-align: center;
-  margin-top: 30px;
+  margin-bottom: 50px;
 }
 
 h1 {
-  margin-bottom: 10px; 
+  font-weight: 700;
+  font-size: 2.5em; /* Responsive font size */
+  color: #1f2c38;
+  margin-bottom: 15px;
 }
 
-.subtitle {
-  font-size: 14px;
-  color: #232323;
-  margin-bottom: 30px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+.subtitle, .credits {
+  font-size: 1em;
+  max-width: 650px;
+  margin: 0 auto 15px auto;
+  line-height: 1.6;
+  padding: 0 20px;
 }
 
 .credits {
-  font-size: 14px;
-  color: #232323;
-  margin-bottom: 30px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  font-weight: 500;
 }
 
+/* ----------------------- */
+/* --- Timeline Styles --- */
+/* ----------------------- */
 .timeline {
-  text-align: center;
-  font-size: 18px;
-  white-space: pre-line;
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 800px;
+  position: relative; /* Establishes a positioning context for the timeline line */
 }
 
+/* The vertical line running down the middle */
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+/* Timeline Item Container */
+.timeline-item {
+  padding: 20px 40px;
+  position: relative;
+  width: 50%;
+  box-sizing: border-box; /* Ensures padding doesn't affect the width */
+}
+
+/* Position items on the left and right */
+.timeline-item:nth-child(odd) {
+  left: 0;
+  padding-right: 30px; /* Space from the center line */
+  text-align: right;
+}
+
+.timeline-item:nth-child(even) {
+  left: 50%;
+  padding-left: 30px; /* Space from the center line */
+  text-align: left;
+}
+
+/* The circular marker on the timeline */
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 30px;
+  background-color: white;
+  border: 4px solid #0095ff;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Position the markers for left and right items */
+.timeline-item:nth-child(odd)::after {
+  right: -9px; /* (18px / 2) */
+}
+
+.timeline-item:nth-child(even)::after {
+  left: -9px; /* (18px / 2) */
+}
+
+/* Style for completed items */
+.timeline-item.completed::after {
+  border-color: #28a745; /* Green for completed */
+}
+
+/* The card that holds the event content */
+.timeline-content {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.timeline-content:hover {
+    transform: translateY(-5px); /* Add a subtle lift on hover */
+}
+
+.timeline-date {
+  font-weight: 700;
+  color: #007bff;
+  font-size: 1.1em;
+  margin-bottom: 5px;
+}
+
+.timeline-title {
+  font-weight: 500;
+  font-size: 0.95em;
+  color: #555;
+}
+
+/* Style for completed dates */
+.timeline-item.completed .timeline-date {
+    color: #28a745;
+}
+
+/* -------------------- */
+/* --- Footer Styles --- */
+/* -------------------- */
 footer {
   text-align: center;
-  font-size: 14px;
-  color: #232323;
-  margin-top: 50px;
-  margin-bottom: 20px;
+  font-size: 1em;
+  padding: 40px 20px 20px 20px;
 }
 
 footer a {
   color: #0095ff;
+  font-weight: 700;
   text-decoration: none;
 }
 
 footer a:hover {
   text-decoration: underline;
 }
+
+/* -------------------------- */
+/* --- Responsive Design --- */
+/* -------------------------- */
+@media screen and (max-width: 768px) {
+  h1 {
+    font-size: 2em;
+  }
+  
+  /* Collapse the timeline to one side */
+  .timeline::before {
+    left: 10px;
+  }
+  
+  .timeline-item {
+    width: 100%;
+    padding-left: 50px;
+    padding-right: 0;
+    text-align: left;
+  }
+
+  /* Move all items to the right of the line */
+  .timeline-item:nth-child(odd),
+  .timeline-item:nth-child(even) {
+    left: 0;
+  }
+  
+  /* Adjust marker position */
+  .timeline-item::after {
+    left: 1px; /* (10px - (18px/2)) */
+  }
+}
 </style>
 </head>
 <body>
+
   <header>
     <h1>iOS 26 Beta Timeline</h1>
     <div class="subtitle">
-      This is all speculation. Some information might not be true. In case of false information, it will be corrected.
-      Remember, these are beta updates which can be unstable, do NOT install it on your main device unless you have a backup on a Mac, PC or iCloud. The most recommended option is to install the updates on a secondary device that is not too importat to you. Stay safe!
+      This is all speculation. Some information might not be true. In case of false information, it will be corrected. Remember, these are beta updates which can be unstable, do NOT install it on your main device unless you have a backup on a Mac, PC or iCloud. The most recommended option is to install the updates on a secondary device that is not too important to you. Stay safe!
     </div>
     <div class="credits">
       Made with ❤️ by Tomm
     </div>
   </header>
-  <main class="timeline">
-Beta 1 (23A5260n) - Monday, June 9 ✅ 
-Beta 1 Hotfix (23A5260u) - Friday, June 13  ✅
-Beta 2 - Monday, June 23
-Beta 3 - Monday, July 7
-Public Beta - Monday, July 14
-Beta 4 - Tuesday, July 22
-Beta 5 - Monday, August 4
-Beta 6 - Monday, August 11
-Beta 7 - Tuesday, August 19
-Beta 8 - Wednesday, August 27
-Release Candidate - Monday, September 8
-Final Release - Monday, September 15
-  </main>
+  
+  <ul class="timeline">
+    
+    <li class="timeline-item completed">
+      <div class="timeline-content">
+        <div class="timeline-date">Monday, June 9</div>
+        <div class="timeline-title">Beta 1 (23A5260n) - ✅ Released</div>
+      </div>
+    </li>
+
+    <li class="timeline-item completed">
+      <div class="timeline-content">
+        <div class="timeline-date">Friday, June 13</div>
+        <div class="timeline-title">Beta 1 Hotfix (23A5260u) - ✅ Released</div>
+      </div>
+    </li>
+    
+    <li class="timeline-item">
+      <div class="timeline-content">
+        <div class="timeline-date">Monday, June 23</div>
+        <div class="timeline-title">Beta 2</div>
+      </div>
+    </li>
+    
+    <li class="timeline-item">
+      <div class="timeline-content">
+        <div class="timeline-date">Monday, July 7</div>
+        <div class="timeline-title">Beta 3</div>
+      </div>
+    </li>
+    
+    <li class="timeline-item">
+      <div class="timeline-content">
+        <div class="timeline-date">Monday, July 14</div>
+        <div class="timeline-title">Public Beta</div>
+      </div>
+    </li>
+
+    <li class="timeline-item">
+      <div class="timeline-content">
+        <div class="timeline-date">Tuesday, July 22</div>
+        <div class="timeline-title">Beta 4</div>
+      </div>
+    </li>
+
+    <li class="timeline-item">
+      <div class="timeline-content">
+        <div class="timeline-date">Monday, August 4</div>
+        <div class="timeline-title">Beta 5</div>
+      </div>
+    </li>
+
+    <li class="timeline-item">
+      <div class="timeline-content">
+        <div class="timeline-date">Monday, August 11</div>
+        <div class="timeline-title">Beta 6</div>
+      </div>
+    </li>
+    
+    <li class="timeline-item">
+      <div class="timeline-content">
+        <div class="timeline-date">Tuesday, August 19</div>
+        <div class="timeline-title">Beta 7</div>
+      </div>
+    </li>
+    
+    <li class="timeline-item">
+      <div class="timeline-content">
+        <div class="timeline-date">Wednesday, August 27</div>
+        <div class="timeline-title">Beta 8</div>
+      </div>
+    </li>
+
+    <li class="timeline-item">
+      <div class="timeline-content">
+        <div class="timeline-date">Monday, September 8</div>
+        <div class="timeline-title">Release Candidate</div>
+      </div>
+    </li>
+    
+    <li class="timeline-item">
+      <div class="timeline-content">
+        <div class="timeline-date">Monday, September 15</div>
+        <div class="timeline-title">Final Release</div>
+      </div>
+    </li>
+
+  </ul>
+  
   <footer>
     For my other projects, check out my <a href="https://tomm101-bored.github.io" target="_blank">main page</a>!
   </footer>
+  
 </body>
 </html>
